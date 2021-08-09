@@ -60,33 +60,36 @@
     </div>
     <div class="select__wrap" v-if="productList.length != 0">
       <p @click="areOptionsVisible = !areOptionsVisible">{{ selected }}</p>
-
-      <div class="select" v-if="areOptionsVisible">
-        <div
-          @click="selectOption(category)"
-          class="select__items"
-          v-for="category in categories"
-          :key="category.value"
-        >
-          {{ category.name }}
+      <transition appear>
+        <div class="select" v-if="areOptionsVisible">
+          <div
+            @click="selectOption(category)"
+            class="select__items"
+            v-for="category in categories"
+            :key="category.value"
+          >
+            {{ category.name }}
+          </div>
         </div>
-      </div>
+      </transition>
     </div>
     <div class="product__list">
-      <div v-for="product in productList" :key="product" class="product">
-        <div class="src__wrap">
-          <img class="src" :src="`${product.src}`" />
-        </div>
-        <div class="text__wrap">
-          <div class="title">{{ product.title }}</div>
-          <div class="description">{{ product.description }}</div>
+      <transition-group name="fade">
+        <div v-for="product in productList" :key="product" class="product">
+          <div class="src__wrap">
+            <img class="src" :src="`${product.src}`" />
+          </div>
+          <div class="text__wrap">
+            <div class="title">{{ product.title }}</div>
+            <div class="description">{{ product.description }}</div>
 
-          <div class="price">{{ product.price }} руб.</div>
+            <div class="price">{{ product.price }} руб.</div>
+          </div>
+          <button type="button" class="remove" @click="removeItem(product.id)">
+            <img src="/img/delete.png" alt="delete" />
+          </button>
         </div>
-        <button type="button" class="remove" @click="removeItem(product.id)">
-          <img src="/img/delete.png" alt="delete" />
-        </button>
-      </div>
+      </transition-group>
     </div>
   </div>
 </template>
@@ -376,6 +379,14 @@ span {
   font-weight: 600;
   font-size: 24px;
   color: #3f3f3f;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 @media (max-width: 768px) {
   .container {
